@@ -3,9 +3,11 @@
 """
 Created on Tue Sep 18 12:21:53 2018
 
-@author: Ahmed Abdullah
+@author: lssd
 """
+# FUNCTION DEFINITION
 
+##=========================================================================
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,8 +43,23 @@ def date_to_number(all_dates,year_0):
     #change date column
     return modified_all_dates;
 
-
-def AMR_Trend_year(df1,antibiotic_names, start_year=2005, end_year=2018, freq=True):
+#calculate frequency and percentage of Resistance/Sensitivity
+def AMR_Trend_year(df1,antibiotic_names, start_year=2005, end_year=2018, freq=False):
+    """
+    
+    arguments
+    =========
+    df: DataFrame containing antibiotic resistance data
+    antibiotic_names: list of antibiotics (should exist as columns in df)
+    start_year: integer specifing the begining of temporal region of interest 
+    end_year: integer specifing the end of temporal region of interest
+    freq: logical True or False, if True  calculate frequency and if False calculate percent resistance
+    returns
+    =======
+    if freq is True: Returns yearwise frequency of Resistance, Sensitive and Intermediate
+    if freq is False: Returns yearwise percent Resistance, Sensitive and Intermediate
+    
+    """
     df1['Date']=pd.to_datetime(df1['Date'])
 
     
@@ -73,7 +90,7 @@ def AMR_Trend_year(df1,antibiotic_names, start_year=2005, end_year=2018, freq=Tr
                 
                 RSI_data=temp_df1.groupby(k).size()
                 l=[z for z in RSI_data]
-                if freq==True:
+                if freq==False:
                     l_sum=sum(l)
                     RSI_data=RSI_data/l_sum
                 if (RSI_data.index == 'S').any():
@@ -102,8 +119,86 @@ def AMR_Trend_year(df1,antibiotic_names, start_year=2005, end_year=2018, freq=Tr
         
         
     return Sensitive_by_Year, Resistant_by_Year, Intermediate_by_Year; 
-   
-#   
+
+#like AMR_Trend_year but if the an year matrix is empty (i.e number of cases =0 ) then we get nan for that year instead of 0  
+def AMR_Trend_year_nan(df1,antibiotic_names, start_year=2005, end_year=2018, freq=False):
+    """
+    
+    arguments
+    =========
+    df: DataFrame containing antibiotic resistance data
+    antibiotic_names: list of antibiotics (should exist as columns in df)
+    start_year: integer specifing the begining of temporal region of interest 
+    end_year: integer specifing the end of temporal region of interest
+    freq: logical True or False, if True  calculate frequency and if False calculate percent resistance
+    returns
+    =======
+    if freq is True: Returns yearwise frequency of Resistance, Sensitive and Intermediate
+    if freq is False: Returns yearwise percent Resistance, Sensitive and Intermediate
+    
+    """
+    
+    df1['Date']=pd.to_datetime(df1['Date'])
+
+    
+    Sensitive_by_Year=pd.DataFrame()
+    Resistant_by_Year=pd.DataFrame()
+    Intermediate_by_Year=pd.DataFrame()
+
+    
+    k_value=0
+    
+    for k in antibiotic_names:            
+        
+        S=[]
+        R=[]
+        I=[]
+        k_value=k_value+1
+        i_value=0
+    
+        for i in range(start_year,end_year):
+            #selecting the rows for ith month temp_df1
+            temp_df1=df1[(df1['Date']>=datetime.datetime( month=1, day=1, year=i)) & (df1['Date']<datetime.datetime(month=1, day=1, year=i+1))]
+            if temp_df1[k].isnull().all():
+                S.append(float('NAN'))
+                R.append(float('NAN'))
+                I.append(float('NAN'))
+                
+            else:
+                
+                RSI_data=temp_df1.groupby(k).size()
+                l=[z for z in RSI_data]
+                if freq==False:
+                    l_sum=sum(l)
+                    RSI_data=RSI_data/l_sum
+                if (RSI_data.index == 'S').any():
+                    S.append(RSI_data['S'])
+                else:
+                    S.append(0)
+            
+                if (RSI_data.index == 'R').any():
+                    R.append(RSI_data['R'])
+                else:
+                    R.append(0)
+                    
+                    
+                if (RSI_data.index == 'I').any(): 
+                    I.append(RSI_data['I'])
+                else:
+                    I.append(0)
+                    
+                
+                i_value=i_value+1
+                
+    
+        Sensitive_by_Year[k]=S
+        Resistant_by_Year[k]=R
+        Intermediate_by_Year[k]=I
+        
+        
+    return Sensitive_by_Year, Resistant_by_Year, Intermediate_by_Year; 
+
+      
 def AMR_Trend(df1,antibiotic_names, start_year=2005, end_year=2018, interval=365.25, freq=True):
 
     end_date=(end_year-start_year)*365.25
@@ -165,8 +260,23 @@ def AMR_Trend(df1,antibiotic_names, start_year=2005, end_year=2018, interval=365
         
         
     return Sensitive_by_Year, Resistant_by_Year, Intermediate_by_Year; 
-
-def AMR_Trend_month(df1,antibiotic_names, start_year=2005, end_year=2018, freq=True):
+#like AMR
+def AMR_Trend_month(df1,antibiotic_names, start_year=2005, end_year=2018, freq=False):
+    """
+    Calculate AMR trend on monthly interval 
+    arguments
+    =========
+    df: DataFrame containing antibiotic resistance data
+    antibiotic_names: list of antibiotics (should exist as columns in df)
+    start_year: integer specifing the begining of temporal region of interest 
+    end_year: integer specifing the end of temporal region of interest
+    freq: logical True or False, if True  calculate frequency and if False calculate percent resistance
+    returns
+    =======
+    if freq is True: Returns yearwise frequency of Resistance, Sensitive and Intermediate
+    if freq is False: Returns yearwise percent Resistance, Sensitive and Intermediate
+    
+    """
     df1['Date']=pd.to_datetime(df1['Date'])
     total_months=(end_year-start_year)*12
     
@@ -202,7 +312,7 @@ def AMR_Trend_month(df1,antibiotic_names, start_year=2005, end_year=2018, freq=T
                 
                 RSI_data=temp_df1.groupby(k).size()
                 l=[z for z in RSI_data]
-                if freq==True:
+                if freq==False:
                     l_sum=sum(l)
                     RSI_data=RSI_data/l_sum
                 if (RSI_data.index == 'S').any():
@@ -261,6 +371,9 @@ def select_organism(df1,org_list):
     return df3
 
 def month_year(N,start_year):
+    """
+    Nth month from start_year is converted to month/year format
+    """
     return str(N%12+1)+'/'+str(start_year+N//12)
 
 def plot_AMR(df1,antibiotic_names,start_year,end_year,org_name='',interval=365.25):
@@ -401,3 +514,87 @@ def ordinal_to_date_1(date_data, base_time='2018-01-01'):
     
     return modified_all_dates
 
+def plot_AMR_year2(df1,antibiotic_names,start_year,end_year,org_name='',Sex=True):
+   
+    if org_name:
+        df1=select_organism(df1,org_name)
+    else:
+        org_name='all'
+    if Sex:
+        df1_m=df1[df1['Sex']=='M']
+        df1_f=df1[df1['Sex']=='F']
+
+    if not Sex:
+        writer=pd.ExcelWriter('yearwise_antibiotic_resistance.xlsx',engine='xlsxwriter')
+        
+        
+    for ab in antibiotic_names:
+        if Sex:
+            S1_m,R1_m,_=AMR_Trend_year(df1_m,[ab],start_year=start_year, end_year=end_year) 
+            R_m=100*R1_m[ab]      
+            S1_f,R1_f,_=AMR_Trend_year(df1_f,[ab],start_year=start_year, end_year=end_year) 
+            R_f=100*R1_f[ab]
+        else:
+            S1,R1,_=AMR_Trend_year(df1,[ab],start_year=start_year, end_year=end_year) 
+            R=100*R1[ab]            
+            
+
+        fig,ax=plt.subplots(nrows=1,ncols=1)
+        mpl.rcParams["font.size"] = 18
+        if Sex:
+            month_n=len(R_m)
+            x=range(month_n)
+        else:
+            month_n=len(R)
+            x=range(len(month_n))
+            
+        if Sex:
+            M_hdle, = ax.plot(x,R_m,linewidth=2, label= 'Male')
+            F_hdle, = ax.plot(x,R_f,linewidth=2, label= 'Female')
+        else:
+            ax.plot(x,R,linewidth=2)
+            
+            
+        
+        ax.set_xlabel('year')
+        ax.set_ylabel('percent resistance')
+        ax.set_xticks(np.array(np.arange(0, month_n, 1)))
+
+        
+        print('start year: ' +str(start_year))
+        print('end_year: '+str(end_year))
+        #ax.xaxis.set_ticks_position(np.arange(min(A.index), max(A.index)+1, 12.0))
+        ax.xaxis.set_ticklabels(list(range(start_year,end_year)))
+        
+        fig.set_size_inches(20, 10)
+        # Shrink current axis by 20%
+        #ax = plt.subplot(111)
+     
+        fmt = '%.0f%%' # Format you want the ticks, e.g. '40%'
+        yticks = mtick.FormatStrFormatter(fmt)
+        ax.yaxis.set_major_formatter(yticks)
+        regex=re.compile('.*/')
+        
+        if re.match(regex,ab):
+            aa=ab.split('/')
+            ab=' or '.join(aa)   
+            
+        #combine_name=''.join(org_name)
+        #name=combine_name+' '+ab[3:]
+        name=ab[3:]
+        ax.legend(handles=[M_hdle,F_hdle])
+        plt.title(name)
+        plt.savefig(name+'.png')
+        plt.clf()
+        if not Sex:
+            R_df=pd.DataFrame()
+            R_df['Sensitive']=S1[list(S1)[0]]
+            R_df['Resistance']=R1[list(R1)[0]]
+            
+               
+            R_df.to_excel(writer,ab,startrow=0)
+            sheet1=writer.sheets[ab]
+            sheet1.insert_image('A'+str(len(S1)+5),name+'.png',{'x_scale': 0.5, 'y_scale': 0.5})
+        plt.close()
+    if not Sex:
+        writer.save()
