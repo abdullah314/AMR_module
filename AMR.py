@@ -3,11 +3,9 @@
 """
 Created on Tue Sep 18 12:21:53 2018
 
-@author: lssd
+@author: Ahmed Abdullah
 """
-# FUNCTION DEFINITION
 
-##=========================================================================
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,6 +15,7 @@ import re
 import os
 import datetime
 
+#import excel file
 def import_file1(directory,file,sheet1):
     import os
     # Change directory 
@@ -29,7 +28,7 @@ def import_file1(directory,file,sheet1):
 
 
 
-
+# Calculate how many days the date (all_dates) from a given year (year_0)
 def date_to_number(all_dates,year_0):
         
     modified_all_dates=[]
