@@ -103,7 +103,7 @@ def AMR_Trend_year(df1,antibiotic_names, start_year=2005, end_year=2018, freq=Tr
         
     return Sensitive_by_Year, Resistant_by_Year, Intermediate_by_Year; 
    
-   
+#   
 def AMR_Trend(df1,antibiotic_names, start_year=2005, end_year=2018, interval=365.25, freq=True):
 
     end_date=(end_year-start_year)*365.25
