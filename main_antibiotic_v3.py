@@ -4,6 +4,9 @@
 Created on Tue Sep 18 12:21:53 2018
 
 @author: Ahmed Abdullah
+
+It uses AMR module (AMR.py) and make plots
+
 """
 import AMR
 import pandas as pd
@@ -19,9 +22,23 @@ def filter_antibiotic(df_enteric, antibiotic_names, occurence ):
             ab_a.append(antibiotics)
     return ab_a
 
-def genus_plot1(df4, species_list, Directory  ):
-    species_name_list=AMR.search_organism(df4['Orgid'].unique(),species_list)
-    df_species_name=AMR.select_organism(df4,species_name_list)
+def genus_plot1(df, species_list, Directory  ):
+    '''
+    Provide dataframe containing antibiotic resistance data , list of species you are interested in and and an output
+    directory to save the images
+    arguments
+    =========
+    df: dataframe containing antibiotic resistance data
+    species_list:  list of species
+    Directory: provide string as directory name
+    
+    returns
+    =======
+    images in Directory folder
+    
+    '''
+    species_name_list=AMR.search_organism(df['Orgid'].unique(),species_list)
+    df_species_name=AMR.select_organism(df,species_name_list)
     os.chdir(Directory)
     os.mkdir('all')
     os.chdir('all')
@@ -29,6 +46,24 @@ def genus_plot1(df4, species_list, Directory  ):
     
 
 def genus_plot2(df4, species_list, occurence, Directory):
+    '''
+    same as function genus_plot1 but filters antibiotic based on occurence. If antibiotic occurs less frequently than the
+    specified number than that antibiotic is ommitted. 
+    
+    Provide dataframe containing antibiotic resistance data , list of species you are interested in and and an output
+    directory to save the images
+    arguments
+    =========
+    df: dataframe containing antibiotic resistance data
+    species_list:  list of species
+    occurence: integer, minimum number of occurence of an antibiotic for inclusion 
+    Directory: provide string as directory name
+    
+    returns
+    =======
+    images in Directory folder
+    
+    '''
     species_name_list=AMR.search_organism(df4['Orgid'].unique(),species_list)
     df_species_name=AMR.select_organism(df4,species_name_list)
     os.chdir(Directory)
