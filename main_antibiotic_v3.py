@@ -79,12 +79,6 @@ file = 'File1.xlsx'
 sheet1='Sheet1'
 df3=AMR.import_file1(directory,file,sheet1)
 
-#%%
-#AMR.AMR_Trend_month(df2,antibiotic_names, start_year=2017, end_year=2018, freq=True)
-
-
-df4=AMR.remove_Hosp_Id(df3,col='Hosp_Id')    
-
 
 #%% Plot percent resistance for some enteric bacteria
 genus_list=['Salmonella','Shigella', 'Vibrio', 'Escherichia', 'Aeromonas', 'Acinetobacter']
