@@ -3,7 +3,7 @@
 """
 Created on Tue Sep 18 12:21:53 2018
 
-@author: lssd
+@author: Ahmed Abdullah
 """
 import AMR
 import pandas as pd
@@ -40,25 +40,17 @@ sex_differ=0
 
 #import excel file 
 directory="path/to/directory"
-file = 'File.xlsx'
+file = 'File1.xlsx'
 sheet1='Sheet1'
-df1=AMR.import_file1(directory,file,sheet1)
+df3=AMR.import_file1(directory,file,sheet1)
 
-file = 'Microbiology_Data_2018.xlsx'
-sheet1='Sheet1'
-df2=AMR.import_file1(directory,file,sheet1)
-
-df2['Date']=AMR.ordinal_to_date_1(date_data=df2['Date'])
-df3=pd.concat([df1,df2],axis=0,sort=False,ignore_index=True)
 #%%
 #AMR.AMR_Trend_month(df2,antibiotic_names, start_year=2017, end_year=2018, freq=True)
 
 
 df4=AMR.remove_Hosp_Id(df3,col='Hosp_Id')    
 
-antibiotic_names=list(df4)[11:]
-antibiotic_names.remove('Patid')
-antibiotic_names.remove('Patname')
+
 #%% Plot percent resistance for some enteric bacteria
 genus_list=['Salmonella','Shigella', 'Vibrio', 'Escherichia', 'Aeromonas', 'Acinetobacter']
 genus_plot1(df4, genus_list,  '/path/to/output1')    
@@ -67,4 +59,4 @@ genus_plot2(df4,genus_list, 1000,  '/path/to/output1')
 genus_plot2(df4, genus_list,10000,  '/path/to/output1') 
 
 #%% 
-genus_plot1(df3, ['Helicobacter pylori'],  '/home/ahmed/Helicobacter pylori') 
+
