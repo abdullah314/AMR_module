@@ -39,11 +39,11 @@ def genus_plot2(df4, species_list, occurence, Directory):
 sex_differ=0
 
 #import excel file 
-directory="/home/ahmed/lssd_home/Abdullah/antibiotic data/antibiotic september 2018"
-file = 'raw_extract.xlsx'
-sheet1='01.raw_extract-tokee'
+directory="path/to/directory"
+file = 'File.xlsx'
+sheet1='Sheet1'
 df1=AMR.import_file1(directory,file,sheet1)
-directory="/home/ahmed/lssd_home/Abdullah/antibiotic data/antibiotic september 2018"
+
 file = 'Microbiology_Data_2018.xlsx'
 sheet1='Sheet1'
 df2=AMR.import_file1(directory,file,sheet1)
@@ -59,12 +59,12 @@ df4=AMR.remove_Hosp_Id(df3,col='Hosp_Id')
 antibiotic_names=list(df4)[11:]
 antibiotic_names.remove('Patid')
 antibiotic_names.remove('Patname')
-#%%
+#%% Plot percent resistance for some enteric bacteria
 genus_list=['Salmonella','Shigella', 'Vibrio', 'Escherichia', 'Aeromonas', 'Acinetobacter']
-genus_plot1(df4, genus_list,  '/home/ahmed/new_plot/Enteric2')    
-genus_plot2(df4, genus_list, 400,  '/home/ahmed/new_plot/Enteric2')     
-genus_plot2(df4,genus_list, 1000,  '/home/ahmed/new_plot/Enteric2')
-genus_plot2(df4, genus_list,10000,  '/home/ahmed/new_plot/Enteric2') 
+genus_plot1(df4, genus_list,  '/path/to/output1')    
+genus_plot2(df4, genus_list, 400,  '/path/to/output1')     
+genus_plot2(df4,genus_list, 1000,  '/path/to/output1')
+genus_plot2(df4, genus_list,10000,  '/path/to/output1') 
 
-
+#%% 
 genus_plot1(df3, ['Helicobacter pylori'],  '/home/ahmed/Helicobacter pylori') 
